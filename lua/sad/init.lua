@@ -20,7 +20,7 @@ M.setup = function(cfg)
   _SAD_CFG = vim.tbl_extend("force", _SAD_CFG, cfg)
 end
 
-M.Replace = function(old, rep)
+M.Replace = function(old, rep, ls_args)
   if old == nil then
     old = vim.fn.expand("<cword>")
     local _, line_start, column_start, _ = unpack(vim.fn.getpos("'<"))
@@ -46,7 +46,12 @@ M.Replace = function(old, rep)
   if _SAD_CFG.exact then
     exact = ' --exact '
   end
-  local cmd = _SAD_CFG.ls_file .. [[ |  sad ]] .. exact .. [[ --pager ]] .. _SAD_CFG.diff .. " " .. oldr .. " " .. rep
+
+  if ls_args == nil then
+    ls_args = ''
+  end
+  local cmd = _SAD_CFG.ls_file .. ls_args .. [[ |  sad ]] .. exact .. [[ --pager ]] .. _SAD_CFG.diff .. " " .. oldr
+                  .. " " .. rep
 
   -- lprint(cmd)
   local term = require('sad.term').run
