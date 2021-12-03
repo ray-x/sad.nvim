@@ -27,12 +27,12 @@ local term = function(opts)
   if columns > 130 then
     -- split in right
     win_height = math.ceil(lines * 0.98)
-    win_width = math.ceil(columns * 0.4)
+    win_width = math.ceil(columns * 0.5)
 
     opts.y = win_height
     opts.x = columns - win_width
   else
-    win_height = math.ceil(lines * 0.3)
+    win_height = math.ceil(lines * 0.6)
     win_width = math.ceil(columns * 0.98)
 
     opts.y = opts.y or lines - win_height

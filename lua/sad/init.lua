@@ -37,11 +37,35 @@ M.Replace = function(old, rep, ls_args)
 
   -- lprint(old)
   local oldr = string.gsub(old, '%(', [[\(]])
-  oldr = string.gsub(old, '%)', [[\)]])
+  oldr = string.gsub(oldr, '%)', [[\)]])
+  oldr = string.gsub(oldr, '%*', [[\*]])
+
+  local repel = "'" .. oldr .. "'"
   if rep == nil then
-    rep = vim.fn.input("Replace " .. oldr .. " with: ", old)
+    rep = vim.fn.input("Replace '" .. oldr .. "' with: ", repel)
+  end
+  lprint(oldr)
+  if oldr:sub(1, 1) == "'" then
+    old = oldr:sub(2, #oldr)
   end
 
+  if oldr:sub(#oldr, #oldr) == "'" then
+    old = old:sub(1, #oldr - 1)
+  end
+  lprint(old)
+
+  lprint(rep, "sss", rep[1], rep[2], rep[#rep])
+  if rep:sub(1, 1) == "'" then
+    rep = rep:sub(2, #rep)
+    lprint(rep)
+
+    if rep:sub(#rep, #rep) == "'" then
+      rep = rep:sub(1, #rep - 1)
+      lprint(rep)
+    end
+  end
+
+  lprint(rep)
   local exact = ''
   if _SAD_CFG.exact then
     exact = ' --exact '
@@ -50,10 +74,10 @@ M.Replace = function(old, rep, ls_args)
   if ls_args == nil then
     ls_args = ''
   end
-  local cmd = _SAD_CFG.ls_file .. ls_args .. [[ |  sad ]] .. exact .. [[ --pager ]] .. _SAD_CFG.diff .. " " .. oldr
-                  .. " " .. rep
+  local cmd = _SAD_CFG.ls_file .. ' ' .. ls_args .. [[ |  sad ]] .. exact .. [[ --pager ]] .. _SAD_CFG.diff .. " '"
+                  .. oldr .. "' '" .. rep .. "'"
 
-  -- lprint(cmd)
+  lprint(cmd)
   local term = require('sad.term').run
   term({cmd = cmd, autoclose = true})
 
