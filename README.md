@@ -10,6 +10,7 @@ You need install `sad` [Install](https://github.com/ms-jpq/sad#get-sad-now)
 # install
 
 ```
+Plug 'ray-x/guihua.lua'  "lua GUI lib
 Plug 'ray-x/sad.nvim'
 ```
 
@@ -23,3 +24,8 @@ require'sad'.setup({
 
 })
 ```
+
+# Alternatives
+* vim&neovim: [far.vim](https://github.com/brooth/far.vim)  implemented with python & vimscript
+* neovim: [nvim-spectre](https://github.com/windwp/nvim-spectre)  Lua plugin, find with  `rg` and replace with `sed`
+and realtime preview
