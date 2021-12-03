@@ -74,8 +74,9 @@ M.Replace = function(old, rep, ls_args)
   if ls_args == nil then
     ls_args = ''
   end
-  local cmd = _SAD_CFG.ls_file .. ' ' .. ls_args .. [[ |  sad ]] .. exact .. [[ --pager ]] .. _SAD_CFG.diff .. " '"
-                  .. oldr .. "' '" .. rep .. "'"
+  local cmd = [[export FZF_DEFAULT_OPTS='--height 90% --layout=reverse --border'; ]] .. _SAD_CFG.ls_file .. ' '
+                  .. ls_args .. [[ |  sad ]] .. exact .. [[ --pager ]] .. _SAD_CFG.diff .. " '" .. oldr .. "' '" .. rep
+                  .. "'"
 
   lprint(cmd)
   local term = require('sad.term').run
