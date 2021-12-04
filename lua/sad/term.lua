@@ -44,6 +44,14 @@ local term = function(opts)
   if opts.autoclose == nil then
     opts.autoclose = true
   end
+
+  opts.closer = function(args)
+    lprint("closer callback")
+    vim.cmd("set noconfirm")
+    vim.cmd("bufdo e!")
+    vim.cmd("set confirm")
+  end
+  opts.closer_args = {}
   local buf, win, closer = guihua_term.floating_term(opts)
   api.nvim_command('setlocal nobuflisted')
   api.nvim_buf_set_var(buf, 'go_float_terminal_win', {buf, win})

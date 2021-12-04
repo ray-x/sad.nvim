@@ -45,8 +45,16 @@ function utils.info(msg)
   vim.api.nvim_echo({{"Info: " .. msg}}, true, {})
 end
 
-utils.log = lprint or function(...)
+if lprint == nil then
+  print('lprint not defined')
+end
+
+utils.log = function(...)
   if _SAD_CFG.debug then
+    if lprint then
+      lprint(...)
+      return
+    end
     print(vim.inspect(...))
   end
 end

@@ -8,7 +8,7 @@ local M = {}
 
 local utils = require('sad.utils')
 local log = utils.log
-
+local lprint = lprint or log
 _SAD_CFG = {
   ls_file = 'fd', -- git ls-file
   diff = 'delta', -- diff-so-fancy
@@ -35,7 +35,6 @@ M.Replace = function(old, rep, ls_args)
     end
   end
 
-  -- lprint(old)
   local oldr = string.gsub(old, '%(', [[\(]])
   oldr = string.gsub(oldr, '%)', [[\)]])
   oldr = string.gsub(oldr, '%*', [[\*]])
@@ -52,20 +51,19 @@ M.Replace = function(old, rep, ls_args)
   if oldr:sub(#oldr, #oldr) == "'" then
     old = old:sub(1, #oldr - 1)
   end
-  lprint(old)
 
-  lprint(rep, "sss", rep[1], rep[2], rep[#rep])
+  -- lprint(rep, "sss", rep[1], rep[2], rep[#rep])
   if rep:sub(1, 1) == "'" then
     rep = rep:sub(2, #rep)
-    lprint(rep)
+    -- lprint(rep)
 
     if rep:sub(#rep, #rep) == "'" then
       rep = rep:sub(1, #rep - 1)
-      lprint(rep)
+      -- lprint(rep)
     end
   end
 
-  lprint(rep)
+  -- lprint(rep)
   local exact = ''
   if _SAD_CFG.exact then
     exact = ' --exact '
@@ -80,8 +78,9 @@ M.Replace = function(old, rep, ls_args)
 
   lprint(cmd)
   local term = require('sad.term').run
-  term({cmd = cmd, autoclose = true})
+  local ret = term({cmd = cmd, autoclose = true})
 
+  lprint(ret)
 end
 
 vim.cmd([[command! -nargs=* Sad lua require("sad").Replace(<f-args>)]])
