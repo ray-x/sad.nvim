@@ -7,6 +7,8 @@ Also fzf will need to be installed [fzf](https://github.com/junegunn/fzf) for pr
 
 You need [install sad](https://github.com/ms-jpq/sad#get-sad-now) and `fzf`, and a pager tool, e.g. `delta`
 
+![sad](https://user-images.githubusercontent.com/1681295/144705179-3f5f368e-119c-4160-919c-7ca277faa8b7.mov)
+
 # install
 
 ```
