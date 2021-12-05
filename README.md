@@ -67,6 +67,12 @@ lua require'sad'.replace(nil, nil, 'md')
 
 ```
 
+## confirm or concel
+
+- \<Tab> To toggle the individual item in the replacement list
+- \<CR> to confirm and apply all the replacemente
+- \<Esc> to cancel all changes
+
 # Alternatives
 
 - vim&neovim: [far.vim](https://github.com/brooth/far.vim) a vim plugin with python & vimscript
