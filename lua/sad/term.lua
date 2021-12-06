@@ -1,4 +1,4 @@
-local utils = require 'go.utils'
+local utils = require 'sad.utils'
 local api = vim.api
 local guihua_term = utils.load_plugin('guihua.lua', 'guihua.floating')
 if not guihua_term then
