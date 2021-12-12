@@ -12,17 +12,47 @@ local lprint = lprint or log
 _SAD_CFG = {
   ls_file = 'fd', -- git ls-file
   diff = 'delta', -- diff-so-fancy
-  exact = false -- Exact match
+  exact = false, -- Exact match
 }
+
+local guihua_helper = utils.load_plugin('guihua.lua', 'guihua.helper')
+if not guihua_helper then
+  utils.warn('guihua not installed, please install ray-x/guihua.lua for GUI functions')
+end
+local function setup(cfg)
+  cfg = cfg or {}
+  _VIEWDOC_CFG = vim.tbl_extend('force', _VIEWDOC_CFG, cfg)
+  vim.cmd([[command! -nargs=* Viewdoc lua require"viewdoc".view(<f-args>)]])
+  local installed = require('guihua.helper').is_installed
+  if not installed('fd') then
+    print('please install fd, e.g. `brew install fd`')
+  end
+
+  if not installed('glow') then
+    print('please install glow, e.g. `brew install glow`')
+  end
+end
 
 M.setup = function(cfg)
   cfg = cfg or {}
-  _SAD_CFG = vim.tbl_extend("force", _SAD_CFG, cfg)
+  _SAD_CFG = vim.tbl_extend('force', _SAD_CFG, cfg)
+
+  if not guihua_helper.is_installed(_SAD_CFG.ls_file) then
+    print('please install ' .. _SAD_CFG.ls_file ..  ' e.g. `brew install' .. _SAD_CFG.ls_file .. '`')
+  end
+
+  if not guihua_helper.is_installed(_SAD_CFG.diff) then
+    print('please install ' .. _SAD_CFG.diff ..  ' e.g. `brew install' .. _SAD_CFG.diff .. '`')
+  end
+  if not guihua_helper.is_installed('sad') then
+    print('please install sad with `brew install ms-jpq/sad/sad`')
+  end
+
 end
 
 M.Replace = function(old, rep, ls_args)
   if old == nil then
-    old = vim.fn.expand("<cword>")
+    old = vim.fn.expand('<cword>')
     local _, line_start, column_start, _ = unpack(vim.fn.getpos("'<"))
     if line_start ~= 0 and column_start ~= 0 then
       local _, line_end, column_end, _ = unpack(vim.fn.getpos("'>"))
@@ -30,7 +60,7 @@ M.Replace = function(old, rep, ls_args)
       if lines and #lines > 0 then
         lines[#lines] = string.sub(lines[#lines], 1, column_end) -- [:column_end - 2]
         lines[1] = string.sub(lines[1], column_start, -1) -- [column_start - 1:]
-        old = vim.fn.join(lines, "\n")
+        old = vim.fn.join(lines, '\n')
       end
     end
   end
@@ -72,13 +102,23 @@ M.Replace = function(old, rep, ls_args)
   if ls_args == nil then
     ls_args = ''
   end
-  local cmd = [[export FZF_DEFAULT_OPTS='--height 90% --layout=reverse --border'; ]] .. _SAD_CFG.ls_file .. ' '
-                  .. ls_args .. [[ |  sad ]] .. exact .. [[ --pager ]] .. _SAD_CFG.diff .. " '" .. oldr .. "' '" .. rep
-                  .. "'"
+  local cmd = [[export FZF_DEFAULT_OPTS='--height 90% --layout=reverse --border'; ]]
+    .. _SAD_CFG.ls_file
+    .. ' '
+    .. ls_args
+    .. [[ |  sad ]]
+    .. exact
+    .. [[ --pager ]]
+    .. _SAD_CFG.diff
+    .. " '"
+    .. oldr
+    .. "' '"
+    .. rep
+    .. "'"
 
   lprint(cmd)
   local term = require('sad.term').run
-  local ret = term({cmd = cmd, autoclose = true})
+  local ret = term({ cmd = cmd, autoclose = true })
 
   lprint(ret)
 end
