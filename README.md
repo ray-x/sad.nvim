@@ -3,9 +3,14 @@
 Space Age seD in neovim. A project wide find and replace plugin with sad & fzf
 
 This plug is a wrapper for [sad](https://github.com/ms-jpq/sad) by `ms-jqd`
-Also fzf will need to be installed [fzf](https://github.com/junegunn/fzf) for preview and filter
 
-You need [install sad](https://github.com/ms-jpq/sad#get-sad-now) and `fzf`, and a pager tool, e.g. `delta`
+You need
+
+- [install sad](https://github.com/ms-jpq/sad#get-sad-now)
+- [fzf](https://github.com/junegunn/fzf) so you can confirm/select the matches to apply your changes
+- by default the plugin using [fd](https://github.com/sharkdp/fd) to list all files in the current folder, you can use
+  `git ls_file`
+- a pager tool, e.g. `delta`
 
 https://user-images.githubusercontent.com/1681295/144705615-658ab025-f2a3-4857-b9d3-e5e2142bf316.mp4
 
@@ -67,11 +72,12 @@ lua require'sad'.replace(nil, nil, 'md')
 
 ```
 
-## confirm or concel
+## confirm or cancel
 
 - \<Tab> To toggle the individual item in the replacement list
-- \<CR> to confirm and apply all the replacemente
+- \<CR> to confirm and apply all the replacement
 - \<Esc> to cancel all changes
+- \<Ctrl-a> toggle select all
 
 # Alternatives
 

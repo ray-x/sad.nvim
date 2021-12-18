@@ -1,10 +1,4 @@
 local M = {}
--- local ListView = require "guihua.listview"
--- local TextView = require "guihua.textview"
--- local util = require "navigator.util"
--- local log = require"navigator.util".log
--- local trace = require"navigator.util".trace
--- local api = vim.api
 
 local utils = require('sad.utils')
 local log = utils.log
@@ -38,16 +32,15 @@ M.setup = function(cfg)
   _SAD_CFG = vim.tbl_extend('force', _SAD_CFG, cfg)
 
   if not guihua_helper.is_installed(_SAD_CFG.ls_file) then
-    print('please install ' .. _SAD_CFG.ls_file ..  ' e.g. `brew install' .. _SAD_CFG.ls_file .. '`')
+    print('please install ' .. _SAD_CFG.ls_file .. ' e.g. `brew install' .. _SAD_CFG.ls_file .. '`')
   end
 
   if not guihua_helper.is_installed(_SAD_CFG.diff) then
-    print('please install ' .. _SAD_CFG.diff ..  ' e.g. `brew install' .. _SAD_CFG.diff .. '`')
+    print('please install ' .. _SAD_CFG.diff .. ' e.g. `brew install' .. _SAD_CFG.diff .. '`')
   end
   if not guihua_helper.is_installed('sad') then
     print('please install sad with `brew install ms-jpq/sad/sad`')
   end
-
 end
 
 M.Replace = function(old, rep, ls_args)
@@ -102,7 +95,7 @@ M.Replace = function(old, rep, ls_args)
   if ls_args == nil then
     ls_args = ''
   end
-  local cmd = [[export FZF_DEFAULT_OPTS='--height 90% --layout=reverse --border'; ]]
+  local cmd = [[export FZF_DEFAULT_OPTS='--height 90% --layout=reverse --border --multi --bind=ctrl-a:toggle-all'; ]]
     .. _SAD_CFG.ls_file
     .. ' '
     .. ls_args
