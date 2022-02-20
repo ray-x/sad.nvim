@@ -23,14 +23,13 @@ end
 
 local term = function(opts)
   opts.term_name = term_name
-  opts.vsplit = 160
-  opts.vheight_ratio = 0.98
-  opts.sheight_ratio = 0.6
-
-  opts.vwidth_ratio = 0.5
-  opts.swidth_ratio = 0.98
+  _SAD_CFG = _SAD_CFG or {} -- supress luacheck warning
+  opts.vsplit = _SAD_CFG.vsplit
+  opts.height_ratio = _SAD_CFG.height_ratio
+  opts.width_ratio = _SAD_CFG.width_ratio
   return guihua_term.gui_term(opts)
 end
 
--- term({cmd = 'echo abddeefsfsafd',  autoclose = false})
+--term({ cmd = 'echo abddeefsfsafd', autoclose = false })
+--term({ cmd = 'lazygit', autoclose = false })
 return { run = term, close = close_float_terminal }

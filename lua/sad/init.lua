@@ -7,6 +7,9 @@ _SAD_CFG = {
   ls_file = 'fd', -- git ls-file
   diff = 'delta', -- diff-so-fancy
   exact = false, -- Exact match
+  vsplit = true, -- split sad window the screen vertically
+  height_ratio = 0.6, -- height ratio of sad window when split horizontally
+  width_ratio = 0.6, -- height ratio of sad window when split vertically
 }
 
 local guihua_helper = utils.load_plugin('guihua.lua', 'guihua.helper')
@@ -15,7 +18,7 @@ if not guihua_helper then
 end
 local function setup(cfg)
   cfg = cfg or {}
-  _VIEWDOC_CFG = vim.tbl_extend('force', _VIEWDOC_CFG, cfg)
+  _SAD_CFG = vim.tbl_extend('force', _SAD_CFG, cfg)
   vim.cmd([[command! -nargs=* Viewdoc lua require"viewdoc".view(<f-args>)]])
   local installed = require('guihua.helper').is_installed
   if not installed('fd') then
