@@ -98,7 +98,13 @@ M.Replace = function(old, rep, ls_args)
   if ls_args == nil then
     ls_args = ''
   end
-  local cmd = [[export FZF_DEFAULT_OPTS='--height 90% --layout=reverse --border --multi --bind=ctrl-a:toggle-all'; ]]
+  local w = math.floor(vim.api.nvim_get_option('columns'))
+  local cmd = string.format(
+    [[export FZF_DEFAULT_OPTS='--height 90%% --layout=reverse --border --multi --bind=ctrl-a:toggle-all';export FZF_PREVIEW_COLUMNS=%d;export FZF_PREVIEW_LINES=33;]],
+    w
+  )
+
+  cmd = cmd
     .. _SAD_CFG.ls_file
     .. ' '
     .. ls_args
