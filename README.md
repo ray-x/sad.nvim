@@ -20,6 +20,21 @@ https://user-images.githubusercontent.com/1681295/144705615-658ab025-f2a3-4857-b
 Plug 'ray-x/guihua.lua'  "lua GUI lib
 Plug 'ray-x/sad.nvim'
 ```
+packer
+```lua
+  require("packer").startup({
+    function(use)
+      use({ "wbthomason/packer.nvim" })
+      use({
+        "ray-x/sad.nvim",
+        requires = { "ray-x/guihua.lua", run = "cd lua/fzy && make" },
+        config = function()
+          require("sad").setup({})
+        end,
+      })
+    end,
+  })
+```
 
 # Configure
 
