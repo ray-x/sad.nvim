@@ -43,7 +43,7 @@ Plug 'ray-x/sad.nvim'
 
 ```lua
 require'sad'.setup({
-  diff = 'delta', -- you can use `diff`, `diff-so-fancy`
+  diff = 'delta', -- you can use `less`, `diff-so-fancy`
   ls_file = 'fd', -- also git ls_file
   exact = false, -- exact match
   vsplit = true, -- split sad window the screen vertically, when set to number
