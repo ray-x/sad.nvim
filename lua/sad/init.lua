@@ -24,10 +24,6 @@ local function setup(cfg)
   if not installed('fd') then
     print('please install fd, e.g. `brew install fd`')
   end
-
-  if not installed('glow') then
-    print('please install glow, e.g. `brew install glow`')
-  end
 end
 
 M.setup = function(cfg)
