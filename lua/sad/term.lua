@@ -35,4 +35,4 @@ end
 
 --term({ cmd = 'echo abddeefsfsafd', autoclose = false })
 --term({ cmd = 'lazygit', autoclose = false })
-return { run = term, close = close_float_terminal }
+return { run = term, close = close_float_terminal, autoclose = _SAD_CFG.autoclose }
