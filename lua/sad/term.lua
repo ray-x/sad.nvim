@@ -30,6 +30,7 @@ local term = function(opts)
   opts.vsplit = _SAD_CFG.vsplit
   opts.height_ratio = _SAD_CFG.height_ratio
   opts.width_ratio = _SAD_CFG.width_ratio
+  utils.log(opts)
   return guihua_term.gui_term(opts)
 end
 
