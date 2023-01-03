@@ -1,6 +1,7 @@
 local M = {}
 
 local utils = require('sad.utils')
+local api = vim.api
 local log = utils.log
 local lprint = lprint or log
 _SAD_CFG = {
@@ -9,7 +10,7 @@ _SAD_CFG = {
   ls_file = 'fd', -- git ls-file
   diff = 'delta', -- diff-so-fancy
   exact = false, -- Exact match
-  vsplit = true, -- split sad window the screen vertically
+  vsplit = false, -- split sad window the screen vertically
   height_ratio = 0.6, -- height ratio of sad window when split horizontally
   width_ratio = 0.6, -- height ratio of sad window when split vertically
 }
@@ -39,6 +40,8 @@ M.setup = function(cfg)
 end
 
 M.Replace = function(old, rep, ls_args)
+  local columns = api.nvim_get_option('columns')
+  local delta_width = math.floor(columns * _SAD_CFG.width_ratio)
   if old == nil then
     old = vim.fn.expand('<cword>')
     local _, line_start, column_start, _ = unpack(vim.fn.getpos("'<"))
@@ -90,12 +93,15 @@ M.Replace = function(old, rep, ls_args)
   if ls_args == nil then
     ls_args = ''
   end
-  local w = math.floor(vim.api.nvim_get_option('columns'))
+  local w = math.floor(api.nvim_get_option('columns') * _SAD_CFG.width_ratio)
   local cmd = string.format(
     [[export FZF_DEFAULT_OPTS='--height 90%% --layout=reverse --border --multi --bind=ctrl-a:toggle-all';export FZF_PREVIEW_COLUMNS=%d;export FZF_PREVIEW_LINES=33;]],
     w
   )
 
+  if _SAD_CFG.diff:find('delta') then
+    _SAD_CFG.diff = string.format("'delta -w %d'", w)
+  end
   cmd = cmd
     .. _SAD_CFG.ls_file
     .. ' '
@@ -110,8 +116,8 @@ M.Replace = function(old, rep, ls_args)
     .. rep
     .. "'"
 
-  vim.api.nvim_create_autocmd({ 'FileChangedShellPost' }, {
-    group = vim.api.nvim_create_augroup('SadAuGroup', {}),
+  api.nvim_create_autocmd({ 'FileChangedShellPost' }, {
+    group = api.nvim_create_augroup('SadAuGroup', {}),
     callback = function()
       vim.cmd('checktime')
     end,
