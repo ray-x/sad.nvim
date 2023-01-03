@@ -108,6 +108,13 @@ M.Replace = function(old, rep, ls_args)
     .. rep
     .. "'"
 
+  vim.api.nvim_create_autocmd({ 'FileChangedShellPost' }, {
+    group = vim.api.nvim_create_augroup('SadAuGroup', {}),
+    callback = function()
+      vim.cmd('checktime')
+    end,
+  })
+
   lprint(cmd)
   local term = require('sad.term').run
   local ret = term({ cmd = cmd, autoclose = true })

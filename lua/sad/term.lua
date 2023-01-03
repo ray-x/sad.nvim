@@ -19,6 +19,9 @@ local function close_float_terminal()
   if float_term_win[2] ~= nil and api.nvim_win_is_valid(float_term_win[2]) then
     api.nvim_win_close(float_term_win[2], true)
   end
+
+  vim.cmd('checktime')
+  -- update the file
 end
 
 local term = function(opts)

@@ -43,6 +43,7 @@ Plug 'ray-x/sad.nvim'
 
 ```lua
 require'sad'.setup({
+  debug = false -- print debug info
   diff = 'delta', -- you can use `less`, `diff-so-fancy`
   ls_file = 'fd', -- also git ls_file
   exact = false, -- exact match
