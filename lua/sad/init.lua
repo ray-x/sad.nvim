@@ -19,17 +19,20 @@ end
 
 M.setup = function(cfg)
   cfg = cfg or {}
+  local installer = utils.installer()
   _SAD_CFG = vim.tbl_extend('force', _SAD_CFG, cfg)
 
   if not guihua_helper.is_installed(_SAD_CFG.ls_file) then
-    print('please install ' .. _SAD_CFG.ls_file .. ' e.g. `brew install ' .. _SAD_CFG.ls_file .. '`')
+    utils.info(
+      'please install ' .. _SAD_CFG.ls_file .. ' e.g. `' .. installer .. ' install ' .. _SAD_CFG.ls_file .. '`'
+    )
   end
 
   if not guihua_helper.is_installed(_SAD_CFG.diff) then
-    print('please install ' .. _SAD_CFG.diff .. ' e.g. `brew install ' .. _SAD_CFG.diff .. '`')
+    utils.info('please install ' .. _SAD_CFG.diff .. ' e.g.  `' .. installer .. ' install ' .. _SAD_CFG.diff .. '`')
   end
   if not guihua_helper.is_installed('sad') then
-    print('please install sad with `brew install ms-jpq/sad/sad`')
+    utils.info('please install sad, e.g. `' .. installer .. ' install ms-jpq/sad/sad`')
   end
 end
 

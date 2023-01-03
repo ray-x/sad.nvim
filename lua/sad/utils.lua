@@ -2,6 +2,19 @@ local utils = {}
 
 local os_name = vim.loop.os_uname().sysname
 local is_windows = os_name == 'Windows' or os_name == 'Windows_NT'
+local is_linux = os_name == 'Linux'
+
+function utils.installer()
+  local installer = 'brew'
+  if is_linux then
+    installer = 'apt'
+  elseif is_windows then
+    installer = 'choco'
+  end
+  return installer
+
+end
+
 function utils.sep()
   if is_windows then
     return '\\'
