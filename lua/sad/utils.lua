@@ -12,7 +12,6 @@ function utils.installer()
     installer = 'choco'
   end
   return installer
-
 end
 
 function utils.sep()
@@ -23,7 +22,7 @@ function utils.sep()
 end
 
 function utils.load_plugin(name, modulename)
-  assert(name ~= nil, "plugin should not empty")
+  assert(name ~= nil, 'plugin should not empty')
   modulename = modulename or name
   local has, plugin = pcall(require, modulename)
   if has then
@@ -31,41 +30,43 @@ function utils.load_plugin(name, modulename)
   end
   if packer_plugins ~= nil then
     -- packer installed
-    local loader = require"packer".loader
+    local loader = require('packer').loader
     if not packer_plugins[name] or not packer_plugins[name].loaded then
       loader(name)
     end
   else
-    vim.cmd("packadd " .. name) -- load with default
+    vim.cmd('packadd ' .. name) -- load with default
   end
 
   has, plugin = pcall(require, modulename)
   if not has then
-    utils.warn("plugin failed to load " .. name)
+    utils.warn('plugin failed to load ' .. name)
   end
   return plugin
 end
 
 function utils.warn(msg)
-  vim.api.nvim_echo({{"WRN: " .. msg, "WarningMsg"}}, true, {})
+  vim.api.nvim_echo({ { 'WRN: ' .. msg, 'WarningMsg' } }, true, {})
 end
 
 function utils.error(msg)
-  vim.api.nvim_echo({{"ERR: " .. msg, "ErrorMsg"}}, true, {})
+  vim.api.nvim_echo({ { 'ERR: ' .. msg, 'ErrorMsg' } }, true, {})
 end
 
 function utils.info(msg)
-  vim.api.nvim_echo({{"Info: " .. msg}}, true, {})
+  vim.api.nvim_echo({ { 'Info: ' .. msg } }, true, {})
 end
 
 utils.log = function(...)
   if _SAD_CFG.debug then
     if lprint then
-      lprint(...)
-      return
+      return lprint(...)
     end
     print(vim.inspect(...))
   end
 end
 
+if lprint and _SAD_CFG.debug then
+  utils.log = lprint
+end
 return utils

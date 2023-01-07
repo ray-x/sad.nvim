@@ -1,9 +1,7 @@
 local M = {}
 
-local utils = require('sad.utils')
 local api = vim.api
-local log = utils.log
-local lprint = lprint or log
+local log = function(...) end
 _SAD_CFG = {
   debug = false,
   autoclose = true,
@@ -15,15 +13,21 @@ _SAD_CFG = {
   width_ratio = 0.6, -- height ratio of sad window when split vertically
 }
 
-local guihua_helper = utils.load_plugin('guihua.lua', 'guihua.helper')
-if not guihua_helper then
-  utils.warn('guihua not installed, please install ray-x/guihua.lua for GUI functions')
-end
-
 M.setup = function(cfg)
   cfg = cfg or {}
-  local installer = utils.installer()
   _SAD_CFG = vim.tbl_extend('force', _SAD_CFG, cfg)
+
+  local utils = require('sad.utils')
+  local guihua_helper = utils.load_plugin('guihua.lua', 'guihua.helper')
+  if not guihua_helper then
+    utils.warn('guihua not installed, please install ray-x/guihua.lua for GUI functions')
+  end
+  local installer = utils.installer()
+
+  log = utils.log
+  if _SAD_CFG.debug and lprint then
+    log = lprint
+  end
 
   if not guihua_helper.is_installed(_SAD_CFG.ls_file) then
     utils.info(
@@ -31,8 +35,11 @@ M.setup = function(cfg)
     )
   end
 
-  if not guihua_helper.is_installed(_SAD_CFG.diff) then
-    utils.info('please install ' .. _SAD_CFG.diff .. ' e.g.  `' .. installer .. ' install ' .. _SAD_CFG.diff .. '`')
+  if _SAD_CFG.diff then
+    local d = vim.split(_SAD_CFG.diff, ' ')[1] or 'delta'
+    if not guihua_helper.is_installed(d) then
+      utils.info('please install ' .. _SAD_CFG.diff .. ' e.g.  `' .. installer .. ' install ' .. _SAD_CFG.diff .. '`')
+    end
   end
   if not guihua_helper.is_installed('sad') then
     utils.info('please install sad, e.g. `' .. installer .. ' install ms-jpq/sad/sad`')
@@ -64,7 +71,7 @@ M.Replace = function(old, rep, ls_args)
   if rep == nil then
     rep = vim.fn.input("Replace '" .. oldr .. "' with: ", repel)
   end
-  lprint(oldr)
+  log(oldr)
   if oldr:sub(1, 1) == "'" then
     old = oldr:sub(2, #oldr)
   end
@@ -73,18 +80,18 @@ M.Replace = function(old, rep, ls_args)
     old = old:sub(1, #oldr - 1)
   end
 
-  -- lprint(rep, "sss", rep[1], rep[2], rep[#rep])
+  -- log(rep, "sss", rep[1], rep[2], rep[#rep])
   if rep:sub(1, 1) == "'" then
     rep = rep:sub(2, #rep)
-    -- lprint(rep)
+    -- log(rep)
 
     if rep:sub(#rep, #rep) == "'" then
       rep = rep:sub(1, #rep - 1)
-      -- lprint(rep)
+      -- log(rep)
     end
   end
 
-  -- lprint(rep)
+  -- log(rep)
   local exact = ''
   if _SAD_CFG.exact then
     exact = ' --exact '
@@ -123,11 +130,11 @@ M.Replace = function(old, rep, ls_args)
     end,
   })
 
-  lprint(cmd)
+  log(cmd)
   local term = require('sad.term').run
-  local ret = term({ cmd = cmd, autoclose = true })
+  local ret = term({ cmd = cmd, autoclose = _SAD_CFG.autoclose })
 
-  lprint(ret)
+  log(ret)
 end
 
 vim.cmd([[command! -nargs=* Sad lua require("sad").Replace(<f-args>)]])

@@ -25,15 +25,15 @@ local function close_float_terminal()
 end
 
 local term = function(opts)
-  opts.term_name = term_name
   _SAD_CFG = _SAD_CFG or {} -- supress luacheck warning
+  utils.log(opts, _SAD_CFG)
+  opts.term_name = term_name
   opts.vsplit = _SAD_CFG.vsplit
   opts.height_ratio = _SAD_CFG.height_ratio
   opts.width_ratio = _SAD_CFG.width_ratio
-  utils.log(opts)
   return guihua_term.gui_term(opts)
 end
 
 --term({ cmd = 'echo abddeefsfsafd', autoclose = false })
 --term({ cmd = 'lazygit', autoclose = false })
-return { run = term, close = close_float_terminal, autoclose = _SAD_CFG.autoclose }
+return { run = term, close = close_float_terminal }
