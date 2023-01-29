@@ -95,6 +95,18 @@ lua require'sad'.replace(nil, nil, 'md')
 
 ```
 
+```vim
+"capture group   "123" -> 🌈123🌈
+:Sad "(\d+)" '🌈$1🌈'
+
+"capture group   123 -> 🌈123🌈
+:Sad (\d+) '🌈$1🌈'
+
+" multiple lines:"
+Sad (firstKey:firstValue\n\s*secondKey):secondVal $1:newSecondValue
+
+```
+
 ## confirm or cancel
 
 - \<Tab> To toggle the individual item in the replacement list

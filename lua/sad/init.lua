@@ -25,8 +25,12 @@ M.setup = function(cfg)
   local installer = utils.installer()
 
   log = utils.log
-  if _SAD_CFG.debug and lprint then
-    log = lprint
+  if _SAD_CFG.debug then
+    if lprint then
+      log = lprint
+    else
+      log = print
+    end
   end
 
   if not guihua_helper.is_installed(_SAD_CFG.ls_file) then
@@ -63,9 +67,11 @@ M.Replace = function(old, rep, ls_args)
     end
   end
 
-  local oldr = string.gsub(old, '%(', [[\(]])
-  oldr = string.gsub(oldr, '%)', [[\)]])
-  oldr = string.gsub(oldr, '%*', [[\*]])
+  -- user specify the args with escape
+  -- local oldr = string.gsub(old, '%(', [[\(]])
+  -- oldr = string.gsub(oldr, '%)', [[\)]])
+  -- local oldr = string.gsub(old, '%*', [[\*]])
+  local oldr = old
 
   local repel = "'" .. oldr .. "'"
   if rep == nil then
@@ -131,6 +137,7 @@ M.Replace = function(old, rep, ls_args)
   })
 
   log(cmd)
+  log(vim.fn.getcwd())
   local term = require('sad.term').run
   local ret = term({ cmd = cmd, autoclose = _SAD_CFG.autoclose })
 
