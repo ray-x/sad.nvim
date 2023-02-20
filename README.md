@@ -43,9 +43,9 @@ Plug 'ray-x/sad.nvim'
 
 ```lua
 require'sad'.setup({
-  debug = false -- print debug info
+  debug = false, -- print debug info
   diff = 'delta', -- you can use `less`, `diff-so-fancy`
-  ls_file = 'fd', -- also git ls_file
+  ls_file = 'fd', -- also git ls-files
   exact = false, -- exact match
   vsplit = false, -- split sad window the screen vertically, when set to number
   -- it is a threadhold when window is larger than the threshold sad will split vertically,
@@ -104,6 +104,8 @@ lua require'sad'.replace(nil, nil, 'md')
 
 " multiple lines:"
 Sad (firstKey:firstValue\n\s*secondKey):secondVal $1:newSecondValue
+" or use ${1}
+Sad (firstKey:firstValue\n\s*secondKey:)secondVal ${1}newSecondValue
 
 ```
 
