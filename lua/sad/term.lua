@@ -25,7 +25,7 @@ local function close_float_terminal()
 end
 
 local term = function(opts)
-  _SAD_CFG = _SAD_CFG or {} -- supress luacheck warning
+  _SAD_CFG = _SAD_CFG or {} -- suppress luacheck warning
   utils.log(opts, _SAD_CFG)
   opts.term_name = term_name
   opts.vsplit = _SAD_CFG.vsplit

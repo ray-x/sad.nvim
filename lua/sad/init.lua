@@ -35,14 +35,28 @@ M.setup = function(cfg)
 
   if not guihua_helper.is_installed(_SAD_CFG.ls_file) then
     utils.info(
-      'please install ' .. _SAD_CFG.ls_file .. ' e.g. `' .. installer .. ' install ' .. _SAD_CFG.ls_file .. '`'
+      'please install '
+        .. _SAD_CFG.ls_file
+        .. ' e.g. `'
+        .. installer
+        .. ' install '
+        .. _SAD_CFG.ls_file
+        .. '`'
     )
   end
 
   if _SAD_CFG.diff then
     local d = vim.split(_SAD_CFG.diff, ' ')[1] or 'delta'
     if not guihua_helper.is_installed(d) then
-      utils.info('please install ' .. _SAD_CFG.diff .. ' e.g.  `' .. installer .. ' install ' .. _SAD_CFG.diff .. '`')
+      utils.info(
+        'please install '
+          .. _SAD_CFG.diff
+          .. ' e.g.  `'
+          .. installer
+          .. ' install '
+          .. _SAD_CFG.diff
+          .. '`'
+      )
     end
   end
   if not guihua_helper.is_installed('sad') then
@@ -129,17 +143,26 @@ M.Replace = function(old, rep, ls_args)
     .. rep
     .. "'"
 
-  api.nvim_create_autocmd({ 'FileChangedShellPost' }, {
+  api.nvim_create_autocmd({ 'FileChangedShell' }, {
     group = api.nvim_create_augroup('SadAuGroup', {}),
     callback = function()
       vim.cmd('checktime')
     end,
+    once = true,
+    buffer = vim.api.nvim_get_current_buf(),
   })
 
   log(cmd)
   log(vim.fn.getcwd())
   local term = require('sad.term').run
-  local ret = term({ cmd = cmd, autoclose = _SAD_CFG.autoclose })
+  local ret = term({
+    cmd = cmd,
+    autoclose = _SAD_CFG.autoclose,
+    on_exit = function()
+      require('sad.term').close()
+      vim.cmd('checktime')
+    end,
+  })
 
   log(ret)
 end
