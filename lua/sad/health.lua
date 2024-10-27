@@ -7,15 +7,15 @@ if not vim.health then
   health = require('health')
 end
 
-local start = health.report_start
-local ok = health.report_ok
-local error = health.report_error
-local warn = health.report_warn
-local info = health.report_info
+local start = health.start
+local ok = health.ok
+local error = health.error
+local warn = health.warn
+local info = health.info
 local vfn = vim.fn
 
 local function binary_check()
-  health.report_start('Binaries')
+  health.start('Binaries')
   local no_err = true
   local sad_bin = 'sad'
   if vfn.executable(sad_bin) == 1 then
