@@ -65,7 +65,7 @@ M.setup = function(cfg)
 end
 
 M.Replace = function(old, rep, ls_args)
-  local columns = api.nvim_get_option('columns')
+  local columns = api.nvim_get_option_value('columns', {})
   local delta_width = math.floor(columns * _SAD_CFG.width_ratio)
   if old == nil then
     old = vim.fn.expand('<cword>')
@@ -120,7 +120,7 @@ M.Replace = function(old, rep, ls_args)
   if ls_args == nil then
     ls_args = ''
   end
-  local w = math.floor(api.nvim_get_option('columns') * _SAD_CFG.width_ratio)
+  local w = math.floor(api.nvim_get_option_value('columns', {}) * _SAD_CFG.width_ratio)
   local cmd = string.format(
     [[export FZF_DEFAULT_OPTS='--height 90%% --layout=reverse --border --multi --bind=ctrl-a:toggle-all';export FZF_PREVIEW_COLUMNS=%d;export FZF_PREVIEW_LINES=33;]],
     w
@@ -167,6 +167,18 @@ M.Replace = function(old, rep, ls_args)
   log(ret)
 end
 
-vim.cmd([[command! -nargs=* Sad lua require("sad").Replace(<f-args>)]])
+vim.api.nvim_create_user_command('Sad', function(opts)
+  M.Replace(opts.args)
+end, { nargs = '*',
+  complete = function(arglead, cmdline, cursorpos)
+    local old = vim.fn.expand('<cword>')
+    local old2 = vim.fn.expand('<cWORD>')
+    local args = vim.split(cmdline, ' ')
+    if #args == 1 then
+      return {}
+    end
+    return { old, old2 }
+  end,
+})
 
 return M
