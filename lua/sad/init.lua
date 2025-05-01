@@ -5,12 +5,12 @@ local log = function(...) end
 _SAD_CFG = {
   debug = false,
   autoclose = true,
-  ls_file = 'fd', -- git ls-file
-  diff = 'delta', -- diff-so-fancy
-  exact = false, -- Exact match
-  vsplit = false, -- split sad window the screen vertically
+  ls_file = 'fd',     -- git ls-file
+  diff = 'delta',     -- diff-so-fancy
+  exact = false,      -- Exact match
+  vsplit = false,     -- split sad window the screen vertically
   height_ratio = 0.6, -- height ratio of sad window when split horizontally
-  width_ratio = 0.6, -- height ratio of sad window when split vertically
+  width_ratio = 0.6,  -- height ratio of sad window when split vertically
 }
 
 M.setup = function(cfg)
@@ -36,12 +36,12 @@ M.setup = function(cfg)
   if not guihua_helper.is_installed(_SAD_CFG.ls_file) then
     utils.info(
       'please install '
-        .. _SAD_CFG.ls_file
-        .. ' e.g. `'
-        .. installer
-        .. ' install '
-        .. _SAD_CFG.ls_file
-        .. '`'
+      .. _SAD_CFG.ls_file
+      .. ' e.g. `'
+      .. installer
+      .. ' install '
+      .. _SAD_CFG.ls_file
+      .. '`'
     )
   end
 
@@ -50,12 +50,12 @@ M.setup = function(cfg)
     if not guihua_helper.is_installed(d) then
       utils.info(
         'please install '
-          .. _SAD_CFG.diff
-          .. ' e.g.  `'
-          .. installer
-          .. ' install '
-          .. _SAD_CFG.diff
-          .. '`'
+        .. _SAD_CFG.diff
+        .. ' e.g.  `'
+        .. installer
+        .. ' install '
+        .. _SAD_CFG.diff
+        .. '`'
       )
     end
   end
@@ -64,18 +64,35 @@ M.setup = function(cfg)
   end
 end
 
-M.Replace = function(old, rep, ls_args)
+M.Replace = function(args)
+  local cword = vim.fn.expand('<cword>')
+  local old, rep, ls_args = cword, cword, ''
+  if args and #args > 0 then
+    if args[1] == '-h' or args[1] == '--help' then
+      vim.cmd('help sad')
+      return
+    end
+    if #args == 1 then
+      old = cword
+    end
+    if #args > 1 then
+      old = args[1]
+      rep = args[2]
+      if #args > 2 then
+        ls_args = table.concat(args, ' ', 3)
+      end
+    end
+  end
   local columns = api.nvim_get_option_value('columns', {})
   local delta_width = math.floor(columns * _SAD_CFG.width_ratio)
-  if old == nil then
-    old = vim.fn.expand('<cword>')
+  if old == cword then
     local _, line_start, column_start, _ = unpack(vim.fn.getpos("'<"))
     if line_start ~= 0 and column_start ~= 0 then
       local _, line_end, column_end, _ = unpack(vim.fn.getpos("'>"))
       local lines = vim.fn.getline(line_start, line_end)
       if lines and #lines > 0 then
         lines[#lines] = string.sub(lines[#lines], 1, column_end) -- [:column_end - 2]
-        lines[1] = string.sub(lines[1], column_start, -1) -- [column_start - 1:]
+        lines[1] = string.sub(lines[1], column_start, -1)        -- [column_start - 1:]
         old = vim.fn.join(lines, '\n')
       end
     end
@@ -130,18 +147,18 @@ M.Replace = function(old, rep, ls_args)
     _SAD_CFG.diff = string.format("'delta -w %d'", w)
   end
   cmd = cmd
-    .. _SAD_CFG.ls_file
-    .. ' '
-    .. ls_args
-    .. [[ |  sad ]]
-    .. exact
-    .. [[ --pager ]]
-    .. _SAD_CFG.diff
-    .. " '"
-    .. oldr
-    .. "' '"
-    .. rep
-    .. "'"
+      .. _SAD_CFG.ls_file
+      .. ' '
+      .. ls_args
+      .. [[ |  sad ]]
+      .. exact
+      .. [[ --pager ]]
+      .. _SAD_CFG.diff
+      .. " '"
+      .. oldr
+      .. "' '"
+      .. rep
+      .. "'"
 
   api.nvim_create_autocmd({ 'FileChangedShell' }, {
     group = api.nvim_create_augroup('SadAuGroup', {}),
@@ -168,8 +185,9 @@ M.Replace = function(old, rep, ls_args)
 end
 
 vim.api.nvim_create_user_command('Sad', function(opts)
-  M.Replace(opts.args)
-end, { nargs = '*',
+  M.Replace(opts.fargs)
+end, {
+  nargs = '*',
   complete = function(arglead, cmdline, cursorpos)
     local old = vim.fn.expand('<cword>')
     local old2 = vim.fn.expand('<cWORD>')
